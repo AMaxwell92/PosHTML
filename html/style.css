@@ -1,5 +1,5 @@
 /*
-    Global Vars
+    Root
 */
 
 :root {
@@ -69,9 +69,9 @@ b {
 }
 
 a {
-    color: var( --fg-color );
-    text-decoration: underline;
-    text-decoration-color: var( --purple );
+    color:                      var( --fg-color );
+    text-decoration:            underline;
+    text-decoration-color:      var( --purple );
 }
 
 .content-container {
@@ -114,13 +114,13 @@ a {
 }
 
 .navbar-logo {
-    margin-left: 1rem;
-    font-weight: 600;
-    font-size: 1rem;
+    margin-left:                1rem;
+    font-weight:                600;
+    font-size:                  1rem;
 }
 
 .navbar-item {
-    font-weight: 600;
+    font-weight:                600;
 }
 
 /*
