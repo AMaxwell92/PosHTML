@@ -22,9 +22,9 @@ This project was originally created to provide a more visually appealing and eas
 | \-\-\-                           | Horizontal Rule        | ❌        |
 | \[ text \]\( link \)             | Hyperlink              | ✅        |
 | \<user@example.com\>             | Mailto: Link           | ❌        |
-| \<https://example.com\>          | Simplified Hyperlink   | ❌        |
+| \<https://example.com>           | Hyperlink Shorthand    | ❌        |
 | \!\[text\]\(example.com/img.png) | Embedded Image         | ❌        |
 
 ## Questions & Feedback
 
-This is a "hobby" project of mine, but I certainly welcome any and all feedback! Have features you'd like to see? Identify a bug in my token parsing? Feel free to reach out via email: <am@hades.so>!
+This is a hobby project of mine, but I certainly welcome any and all feedback! Have features you'd like to see? Identify a bug in my token parsing? Feel free to reach out via email: <am@hades.so>!
