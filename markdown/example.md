@@ -11,7 +11,7 @@ We'll start the sample out with some regular text.
 - And this is ***bold and italicized***!
 - And this is ***_bold and italicized and underlined_***!
 
->> Hey! Look here! I'm a callout!
+{ Hey! Look here! I'm a callout! }
 
 > Did someone actually say this? Probably not, but it's a quote nonetheless!
 

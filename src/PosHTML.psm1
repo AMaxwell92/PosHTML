@@ -116,13 +116,6 @@ $html_format = @'
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     </head>
     <body>
-        <!-- <div class="navbar">
-            <div class="navbar-content-container">
-                <span class="navbar-logo">
-
-                </span>
-            </div>
-        </div> -->
         <div class="header"></div>
         <div class="content-container">
             {0}
@@ -133,7 +126,6 @@ $html_format = @'
 
 # callout html format
 $callout_format = @'
-            <!-- <ul> -->
                 <callout>
                     <callout-icon>
                         💡
@@ -142,7 +134,6 @@ $callout_format = @'
                         {0}
                     </callout-content>
                 </callout>
-            <!-- </ul> -->
 
 '@
 
@@ -163,8 +154,9 @@ function Convert-MDToHTML {
 
     $page        = ''
     $indent      = ''
-    $list_level  = 1
+    $ul_level  = 1
     $table_level = 1
+    $quote_level = 1
 
     # iterate file lines
     Get-Content $In | % {
@@ -266,9 +258,9 @@ function Convert-MDToHTML {
             $line = $line -replace $pattern, ''
 
             # open the unordered list, if necessary
-            if ( $list_level -eq 1 -or $indent_level -gt $list_level ) {
+            if ( $ul_level -eq 1 -or $indent_level -gt $ul_level ) {
 
-                $list_level += 1
+                $ul_level += 1
                 $page += "$( $ul.Open() )`n"
 
             }
@@ -278,19 +270,19 @@ function Convert-MDToHTML {
             return
 
         # close any open lists
-        } elseif ( $list_level -gt 1 ) {
+        } elseif ( $ul_level -gt 1 ) {
 
-            $page += ( "$( $ul.Close() )`n" ) * ( $list_level - 1 )
-            $list_level = 1
+            $page += ( "$( $ul.Close() )`n" ) * ( $ul_level - 1 )
+            $ul_level = 1
 
         }
 
         # callouts
-        $pattern = '^>>\s'
+        $pattern = '^\{(.*?)\}'
         if ( $line -match $pattern ) {
 
-            $line = $line -replace $pattern, ''
-            $page += $callout_format -f $line
+            $line = $line -replace $pattern, '$1'
+            $page += $callout_format -f $line.Trim()
             return
 
         }
@@ -351,7 +343,7 @@ function Convert-MDToHTML {
         }
 
         # quotes
-        $pattern = '^>\s'
+        $pattern = '^>{1,}\s'
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern, ''
@@ -370,9 +362,9 @@ function Convert-MDToHTML {
 
     }
 
-    if ( $list_level -gt 1 ) {
+    if ( $ul_level -gt 1 ) {
 
-        $page += ( "$( $ul.Close() )`n" ) * ( $list_level - 1 )
+        $page += ( "$( $ul.Close() )`n" ) * ( $ul_level - 1 )
 
     }
 
