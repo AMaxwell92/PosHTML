@@ -4,7 +4,7 @@
 
 PosHTML ( pronounced "posh-tee-em-el" ) is a simple PowerShell module designed to convert a lightly enriched Markdown syntax to static HTML.
 
-This project was originally created to provide a more visually appealing and easily readable format to review notes I prepared for meetings and similar. Development for this project will continually expand and eventually be folded into a separate tool that will allow generation of entire static websites with.
+This project was originally created to provide a more visually appealing and easily readable format to review notes I prepared for meetings and similar, as well as an opportunity to learn CSS! Development for this project will continually expand and eventually be folded into a separate tool that will allow generation of entire static websites.
 
 ## Token Support Status
 
@@ -24,6 +24,7 @@ This project was originally created to provide a more visually appealing and eas
 | \<user@example.com\>             | Mailto: Link           | ❌        |
 | \<https://example.com>           | Hyperlink Shorthand    | ❌        |
 | \!\[text\]\(example.com/img.png) | Embedded Image         | ❌        |
+| { Important message! }           | Callout                | ✅        |
 
 ## Questions & Feedback
 

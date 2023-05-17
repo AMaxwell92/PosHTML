@@ -1,4 +1,4 @@
-Import-Module .\src\MDToHTML.psm1
+Import-Module .\src\PosHTML.psm1
 
 $html_template = ( get-content .\templates\page.html ) -join "`n"
 
