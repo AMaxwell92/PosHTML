@@ -226,10 +226,11 @@ quote {
     border-radius:              4px;
     border-color:               var( --purple );
     padding:                    var( --box-padding );
-    display:                    flex;
+    display:                    grid;
     align-items:                center;
     box-shadow:                 var( --box-shadow );
     font-style:                 italic;
+    white-space:                pre-wrap;
 }
 
 /*

@@ -154,9 +154,9 @@ function Convert-MDToHTML {
 
     $page        = ''
     $indent      = ''
-    $ul_level  = 1
+    $ul_level    = 1
     $table_level = 1
-    $quote_level = 1
+    $quote_level = 0
 
     # iterate file lines
     Get-Content $In | % {
@@ -343,12 +343,22 @@ function Convert-MDToHTML {
         }
 
         # quotes
-        $pattern = '^>{1,}\s'
+        $pattern = '^(>{1,})\s'
         if ( $line -match $pattern ) {
 
+            # get number of leading symbols
+            $quote_level_delta = ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value.length - $quote_level
+            $quote_level_delta = [ system.math ]::Max( $quote_level_delta, 0 )
+            $quote_level += $quote_level_delta
+            $page += "$( $quote.Open() )" * $quote_level_delta
             $line = $line -replace $pattern, ''
-            $page += $quote.Wrap( $line )
+            $page += "$( $line )`n"
             return
+
+        } elseif ( $quote_level -gt 0 ) {
+
+            $page += "$( $quote.Close() )`n" * ( $quote_level )
+            $quote_level = 0
 
         }
 
