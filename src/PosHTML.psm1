@@ -105,6 +105,7 @@ $bold      = [ Tag ]::new( 'b'    )
 $italics   = [ Tag ]::new( 'i'    )
 $underline = [ Tag ]::new( 'u'    )
 $link      = [ LinkTag ]::new()
+$cb        = [ Tag ]::new( 'cb'   )
 
 # base html file format
 $html_format = @'
@@ -157,6 +158,7 @@ function Convert-MDToHTML {
     $ul_level    = 1
     $table_level = 1
     $quote_level = 0
+    $cb_open     = $false
 
     # iterate file lines
     Get-Content $In | % {
@@ -225,7 +227,7 @@ function Convert-MDToHTML {
         $pattern = '^###\s'
         if ( $line -match $pattern ) {
 
-            $line = $line -replace $pattern, ''
+            $line = $line -replace $pattern
             $page += $h3.Wrap( $line )
             return
 
@@ -235,7 +237,7 @@ function Convert-MDToHTML {
         $pattern = '^##\s'
         if ( $line -match $pattern ) {
 
-            $line = $line -replace $pattern, ''
+            $line = $line -replace $pattern
             $page += $h2.Wrap( $line )
             return
 
@@ -245,7 +247,7 @@ function Convert-MDToHTML {
         $pattern = '^#\s'
         if ( $line -match $pattern ) {
 
-            $line = $line -replace $pattern, ''
+            $line = $line -replace $pattern
             $page += $h1.Wrap( $line )
             return
 
@@ -255,7 +257,7 @@ function Convert-MDToHTML {
         $pattern = '^-\s'
         if ( $line -match $pattern ) {
 
-            $line = $line -replace $pattern, ''
+            $line = $line -replace $pattern
 
             # open the unordered list, if necessary
             if ( $ul_level -eq 1 -or $indent_level -gt $ul_level ) {
@@ -351,7 +353,7 @@ function Convert-MDToHTML {
             $quote_level_delta = [ system.math ]::Max( $quote_level_delta, 0 )
             $quote_level += $quote_level_delta
             $page += "$( $quote.Open() )" * $quote_level_delta
-            $line = $line -replace $pattern, ''
+            $line = $line -replace $pattern
             $page += "$( $line )`n"
             return
 
@@ -359,6 +361,30 @@ function Convert-MDToHTML {
 
             $page += "$( $quote.Close() )`n" * ( $quote_level )
             $quote_level = 0
+
+        }
+
+        # code block - open
+        $pattern = '```'
+        if ( $line -match $pattern -and -not $cb_open ) {
+
+            $line = $line -replace $pattern
+            $cb_open = $true
+            $page += "$( $cb.Open() )"
+            if ( $line.Trim().length -gt 0 ) { $page += "$( $line )`n" }
+            return
+
+        } elseif ( $line -match $pattern -and $cb_open ) {
+
+            $line = $line -replace $pattern
+            if ( $line.Trim().length -gt 0 ) { $page += "$( $line )`n" }
+            $page += "$( $cb.Close() )`n"
+            return
+
+        } elseif ( $cb_open ) {
+
+            $page += "$line`n"
+            return
 
         }
 

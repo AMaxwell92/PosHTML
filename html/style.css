@@ -219,17 +219,14 @@ li:before {
 */
 
 quote {
+    background-color:#ffffff09;
     margin-top:                 1.25rem;
     margin-bottom:              1.25rem;
-    background-color:           var( --quote-bg );
     border-left:                5px solid;
-    border-radius:              4px;
     border-color:               var( --purple );
-    padding:                    var( --box-padding );
+    padding-left:               1rem;
     display:                    grid;
     align-items:                center;
-    box-shadow:                 var( --box-shadow );
-    font-style:                 italic;
     white-space:                pre-wrap;
 }
 
@@ -263,6 +260,30 @@ callout-content {
     width:                      100%;
     display: flex;
     align-items: center;
+}
+
+/*
+    Code Blocks
+*/
+
+cb {
+    display:                    grid;
+    background-color:           var( --bg-color-lighter ) !important;
+    box-shadow:                 var( --box-shadow );
+    word-spacing:               normal;
+    word-break:                 normal;
+    tab-size:                   4;
+    hyphens:                    none;
+    font-size:                  0.9rem;
+    line-height:                1.5rem;
+    white-space:                pre-wrap;
+    overflow-wrap:              normal;
+    margin:                     10px 0;
+    direction:                  ltr;
+    overflow:                   auto;
+    padding:                    2rem;
+    align-content:              center;
+    border-radius:              var( --box-border-radius );
 }
 
 /*
