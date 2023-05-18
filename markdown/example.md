@@ -22,8 +22,17 @@ We'll start the sample out with some regular text.
 >> Quote!
 
 ```
-And here, we have a code block!
-Spanning multiple lines!
+if ( $this ) { write-output 'Then that!' }
 ```
 
 [ Oh, and a hyperlink! ]( https://google.com )
+
+---
+
+| Ah yes!   | Columns! | Beautiful!  | Columns!     |
+| --------- | -------- | ----------- | ------------ |
+| The       | Quick    | Brown       | Fox          |
+| Jumped    | Over     | The Lazy    | Dog          |
+
+---
+

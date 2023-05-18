@@ -19,7 +19,7 @@ This project was originally created to provide a more visually appealing and eas
 | \>\>                             | Nested Quotes          | ✅        |
 | \`some code\`                    | Inline Code            | ❌        |
 | \`\`\`some code\`\`\`            | Code Block             | ✅        |
-| \-\-\-                           | Horizontal Rule        | ❌        |
+| \-\-\-                           | Horizontal Rule        | ✅        |
 | \[ text \]\( link \)             | Hyperlink              | ✅        |
 | \<user@example.com\>             | Mailto: Link           | ❌        |
 | \<https://example.com>           | Hyperlink Shorthand    | ❌        |

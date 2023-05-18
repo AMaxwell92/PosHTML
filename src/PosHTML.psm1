@@ -53,15 +53,15 @@ class Tag {
 
     }
 
-    [ string ] Wrap( [ string ] $value ) {
+    [ string ] wrap( [ string ] $value ) {
 
-        return $this.Open(), $value.Trim(), $this.Close(), "`n" -join ''
+        return $this.Open(), $value.trim(), $this.Close(), "`n" -join ''
 
     }
 
-    [ string ] Wrap( [ string ] $value, [ bool ] $no_newline ) {
+    [ string ] wrap( [ string ] $value, [ bool ] $no_newline ) {
 
-        return $this.Open(), $value.Trim(), $this.Close() -join ''
+        return $this.Open(), $value.trim(), $this.Close() -join ''
 
     }
 }
@@ -72,16 +72,16 @@ class LinkTag : Tag {
     LinkTag() : base( 'a' ) { }
 
     # hyperlink-only
-    [ string ] Wrap( [ string ] $link ) {
+    [ string ] wrap( [ string ] $link ) {
 
-        return '<a href="', $link, '">', $link.Trim(), '</a>' -join ''
+        return '<a href="', $link, '">', $link.trim(), '</a>' -join ''
 
     }
 
     # hyperlink with display text
-    [ string ] Wrap( [ string ] $link_text, [ string ] $link ) {
+    [ string ] wrap( [ string ] $link_text, [ string ] $link ) {
 
-        return '<a href="', $link, '">', $link_text.Trim(), '</a>' -join ''
+        return '<a href="', $link, '">', $link_text.trim(), '</a>' -join ''
 
     }
 }
@@ -190,7 +190,7 @@ function Convert-MDToHTML {
         $pattern = '\*\*(?!\*)(.*?)\*\*'
         if ( $line -match $pattern ) {
 
-            $repl = $bold.Wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
+            $repl = $bold.wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
             $line = $line -replace $pattern, $repl
 
         }
@@ -199,7 +199,7 @@ function Convert-MDToHTML {
         $pattern = '\*(?!\*)(.*?)\*'
         if ( $line -match $pattern ) {
 
-            $repl = $italics.Wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
+            $repl = $italics.wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
             $line = $line -replace $pattern, $repl
 
         }
@@ -208,9 +208,9 @@ function Convert-MDToHTML {
         $pattern = '\[(.*?)\]\((.*?)\)'
         if ( $line -match $pattern ) {
 
-            $match = select-string $pattern -inputobject $line
-            $text, $url = $match.matches.groups[ 1 ].value.Trim(), $match.matches.groups[ 2 ].value.Trim()
-            $repl = $link.Wrap( $text, $url )
+            $mgroups = ( select-string $pattern -inputobject $line ).matches.groups
+            $text, $url = $mgroups[ 1 ].value.trim(), $mgroups[ 2 ].value.trim()
+            $repl = $link.wrap( $text, $url )
             $line = $line -replace $pattern, $repl
 
         }
@@ -219,7 +219,7 @@ function Convert-MDToHTML {
         $pattern = '_(.*?)_'
         if ( $line -match $pattern ) {
 
-            $repl = $underline.Wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
+            $repl = $underline.wrap( ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value, $true )
             $line = $line -replace $pattern, $repl
 
         }
@@ -229,7 +229,7 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern
-            $page += $h3.Wrap( $line )
+            $page += $h3.wrap( $line )
             return
 
         }
@@ -239,7 +239,7 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern
-            $page += $h2.Wrap( $line )
+            $page += $h2.wrap( $line )
             return
 
         }
@@ -249,7 +249,7 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern
-            $page += $h1.Wrap( $line )
+            $page += $h1.wrap( $line )
             return
 
         }
@@ -269,7 +269,7 @@ function Convert-MDToHTML {
             }
 
             # add the list item
-            $page += $li.Wrap( $line )
+            $page += $li.wrap( $line )
             return
 
         # close any open lists
@@ -285,7 +285,7 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern, '$1'
-            $page += $callout_format -f $line.Trim()
+            $page += $callout_format -f $line.trim()
             return
 
         }
@@ -302,22 +302,22 @@ function Convert-MDToHTML {
                 # get column headers
                 $headers = $line -split '\|' | % {
 
-                    $header = $_.Trim()
+                    $header = $_.trim()
 
                     if ( $header.length -gt 0 ) {
 
-                        $th.Wrap( $_ )
+                        $th.wrap( $_ )
 
                     }
                 }
 
                 # close the table row
-                $page += $tr.Wrap( $headers )
+                $page += $tr.wrap( $headers )
                 return
 
             } else {
 
-                # skip the buffer rows
+                # skip the buffer rows ( | --- | )
                 if ( $line -match '[A-Za-z0-9]' ) {
 
                     $cols = $line -split '\|' | % {
@@ -328,15 +328,15 @@ function Convert-MDToHTML {
                         if ( $data.length -gt 0 ) {
 
                             # td wrap
-                            $td.Wrap( $data )
+                            $td.wrap( $data )
 
                         }
                     }
 
-                    $page += $tr.Wrap( $cols -join '' )
+                    $page += $tr.wrap( $cols -join '' )
                     return
 
-                }
+                } else { return }
             }
         } elseif ( $table_level -gt 1 ) {
 
@@ -374,26 +374,39 @@ function Convert-MDToHTML {
             $line = $line -replace $pattern
 
             $page += "$( $cb.Open() )"
-            if ( $line.Trim().length -gt 0 ) {
+            if ( $line.trim().length -gt 0 ) {
                 $page += "$( $line )`n" }
             return
 
         } elseif ( $line -match $pattern -and $cb_open ) {
 
             $line = $line -replace $pattern
-            if ( $line.Trim().length -gt 0 ) {
+            if ( $line.trim().length -gt 0 ) {
                 $page += "$( $line )`n" }
 
             $page += "$( $cb.Close() )`n"
+
+            $cb_open = $false
 
             return
 
         } elseif ( $cb_open ) {
 
             $line = $line -replace $pattern
-            if ( $line.Trim().length -gt 0 ) {
+            if ( $line.trim().length -gt 0 ) {
                 $page += "$( $line )`n" }
 
+            return
+
+        }
+
+        # inline code
+
+
+        # horizontal rule
+        if ( $line.trim() -eq '---' ) {
+
+            $page += "<hr></hr>`n"
             return
 
         }

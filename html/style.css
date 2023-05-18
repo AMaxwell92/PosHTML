@@ -79,6 +79,15 @@ a {
     text-decoration-color:      var( --purple );
 }
 
+hr {
+    border:                     0;
+    border-bottom:              1px solid;
+    margin-top:                 1.5vh;
+    margin-bottom:              1.5vh;
+    border-color:               var( --box-border-color );
+	box-shadow:                 var( --box-shadow );
+}
+
 .content-container {
     max-width:                  900px;
     box-sizing:                 border-box;
@@ -144,7 +153,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color:           var( --scroll-handle-color   );
+    background-color:           var( --scroll-handle-color  );
     border:                     3px solid transparent;
     border-radius:              8px;
     background-clip:            content-box;
@@ -175,7 +184,7 @@ h2 {
     font-size:                  var( --heading2-size    );
     font-weight:                600;
     margin-bottom:              0;
-    padding:                    3px 2px;
+    padding:                    3px 0;
     position:                   relative;
     font-family:                var( --primary-font     );
 }
@@ -224,7 +233,7 @@ li:before {
 */
 
 quote {
-    background-color:#ffffff09;
+    background-color:           #ffffff09;
     margin-top:                 1.25rem;
     margin-bottom:              1.25rem;
     border-left:                5px solid;
@@ -263,8 +272,8 @@ callout-content {
     margin-inline-start:        8px;
     overflow:                   hidden;
     width:                      100%;
-    display: flex;
-    align-items: center;
+    display:                    flex;
+    align-items:                center;
 }
 
 /*
