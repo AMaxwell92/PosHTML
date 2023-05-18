@@ -104,10 +104,11 @@ $quote     = [ Tag ]::new( 'quote')
 $bold      = [ Tag ]::new( 'b'    )
 $italics   = [ Tag ]::new( 'i'    )
 $underline = [ Tag ]::new( 'u'    )
-$link      = [ LinkTag ]::new()
 $cb        = [ Tag ]::new( 'cb'   )
+$hr        = [ Tag ]::new( 'hr'   )
+$link      = [ LinkTag ]::new()
 
-# base html file format
+# default html skeleton
 $html_format = @'
 <!DOCTYPE html>
 <html>
@@ -364,26 +365,35 @@ function Convert-MDToHTML {
 
         }
 
-        # code block - open
+        # code block
         $pattern = '```'
         if ( $line -match $pattern -and -not $cb_open ) {
 
-            $line = $line -replace $pattern
             $cb_open = $true
+
+            $line = $line -replace $pattern
+
             $page += "$( $cb.Open() )"
-            if ( $line.Trim().length -gt 0 ) { $page += "$( $line )`n" }
+            if ( $line.Trim().length -gt 0 ) {
+                $page += "$( $line )`n" }
             return
 
         } elseif ( $line -match $pattern -and $cb_open ) {
 
             $line = $line -replace $pattern
-            if ( $line.Trim().length -gt 0 ) { $page += "$( $line )`n" }
+            if ( $line.Trim().length -gt 0 ) {
+                $page += "$( $line )`n" }
+
             $page += "$( $cb.Close() )`n"
+
             return
 
         } elseif ( $cb_open ) {
 
-            $page += "$line`n"
+            $line = $line -replace $pattern
+            if ( $line.Trim().length -gt 0 ) {
+                $page += "$( $line )`n" }
+
             return
 
         }

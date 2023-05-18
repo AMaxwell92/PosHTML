@@ -8,11 +8,11 @@
     --fg-color:                 #f8f8f2;
     --bg-color:                 #282a36;
     --bg-color-lighter:         #44475a;
-    --callout-color:            #2a292b;
+    --callout-bg:               #2a292b;
     --quote-bg:                 #44475a;
-    --sb-bg:                    #282a36;
-    --sb-thumb-color:           #bd93f9;
-    --sb-border-color:          #44475a;
+    --scroll-bg:                #282a36;
+    --scroll-handle-color:      #bd93f9;
+    --scroll-border-color:      #44475a;
     --cyan:                     #8be9fd;
     --green:                    #50fa7b;
     --orange:                   #ffb86c;
@@ -22,25 +22,25 @@
     --yellow:                   #f1fa8c;
     --tr-border:                #44475a;
     --tr-alt-bg:                #444245;
-    --padding-layout:           0.6rem;
-    --box-padding:              calc( var(--padding-layout) + 0.4rem )
-                                calc( var(--padding-layout) + 0.4rem )
-                                calc( var(--padding-layout) + 0.4rem )
-                                calc( var(--padding-layout) + 0.1em );
-    --box-shadow:               rgba(0, 0, 0, 0.5) 0px 20px 40px -10px;
     --box-border-color:         #44475a;
+    --padding-layout:           0.6rem;
+    --box-padding:              calc( var( --padding-layout ) + 0.4rem  )
+                                calc( var( --padding-layout ) + 0.4rem  )
+                                calc( var( --padding-layout ) + 0.4rem  )
+                                calc( var( --padding-layout ) + 0.1rem  );
+    --box-shadow:               rgba(0, 0, 0, 0.5) 0px 20px 40px -10px;
     --box-border:               1px solid;
-    --box-border-radius:        8px;
+    --box-border-radius:        12px;
     --heading-size:             1rem;
-    --heading1-size:            calc( var( --heading-size ) * 1.875 );
-    --heading2-size:            calc( var( --heading-size ) * 1.5   );
-    --heading3-size:            calc( var( --heading-size ) * 1.25  );
-    --heading4-size:            calc( var( --heading-size ) * 1     );
-    --heading5-size:            calc( var( --heading-size ) * 0.8125);
+    --heading1-size:            calc( var( --heading-size ) * 1.875     );
+    --heading2-size:            calc( var( --heading-size ) * 1.5       );
+    --heading3-size:            calc( var( --heading-size ) * 1.25      );
+    --heading4-size:            calc( var( --heading-size ) * 1         );
+    --heading5-size:            calc( var( --heading-size ) * 0.8125    );
 }
 
 /*
-    General Page Elements
+    Page & Elements
 */
 
 html {
@@ -49,11 +49,11 @@ html {
     box-sizing:                 border-box;
 }
 
-.header {
-    max-height:                 140px;
-    height:                     140px;
+header {
+    max-height:                 5vh;
+    height:                     5vh;
+    margin-bottom:              1vh;
     width:                      auto;
-    margin-bottom:              1rem;
 }
 
 body {
@@ -64,13 +64,18 @@ body {
     margin:                     0;
 }
 
+footer {
+    max-height:                 0;
+    height:                     0;
+}
+
 b {
     font-weight:                600;
 }
 
 a {
-    color:                      var( --fg-color );
     text-decoration:            underline;
+    color:                      var( --fg-color );
     text-decoration-color:      var( --purple );
 }
 
@@ -134,12 +139,12 @@ a {
 ::-webkit-scrollbar-track {
     border-left:                1px solid;
     border-right:               1px solid;
-    border-color:               var( --sb-border-color  );
-    background:                 var( --sb-bg            );
+    border-color:               var( --scroll-border-color  );
+    background:                 var( --scroll-bg            );
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color:           var( --sb-thumb-color   );
+    background-color:           var( --scroll-handle-color   );
     border:                     3px solid transparent;
     border-radius:              8px;
     background-clip:            content-box;
@@ -237,7 +242,7 @@ quote {
 callout {
     margin-top:                 1.25rem;
     margin-bottom:              1.25rem;
-    background-color:           var( --callout-color        );
+    background-color:           var( --callout-bg        );
     padding:                    var( --box-padding          );
     border:                     var( --box-border           );
     border-color:               var( --box-border-color     );
@@ -293,7 +298,7 @@ cb {
 table {
     padding:                    0.2rem;
     box-shadow:                 var( --box-shadow       );
-    background-color:           var( --callout-color    );
+    background-color:           var( --callout-bg    );
     border:                     var( --box-border       );
     border-color:               var( --box-border-color );
     border-radius:              var( --box-border-radius);
