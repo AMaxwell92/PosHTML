@@ -1,7 +1,15 @@
 
 # This is a Demo Markdown File!
 
-## This is another heading!
+## Heading 2!
+
+### Heading 3!
+
+#### Heading 4!
+
+##### Heading 5!
+
+###### Heading 6!
 
 We'll start the sample out with some regular text.
 
@@ -10,6 +18,9 @@ We'll start the sample out with some regular text.
 - And this is *italicized*!
 - And this is ***bold and italicized***!
 - And this is ***_bold and italicized and underlined_***!
+    - With multiple
+        - Levels
+- Here we have some inline code: `if ( $this ) { write-host 'then that!' }`
 
 { Hey! Look here! I'm a callout! }
 
@@ -35,4 +46,3 @@ if ( $this ) { write-output 'Then that!' }
 | Jumped    | Over     | The Lazy    | Dog          |
 
 ---
-
