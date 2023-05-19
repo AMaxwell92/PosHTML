@@ -1,40 +1,23 @@
 
-# default html skeleton
-$htmlFormat = @'
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
-    </head>
-    <body>
-    <header></header>
-    <div class="content-container">
-    {0}</div>
-    <footer></footer>
-    </body>
-    </html>
-'@
-
 # callout html format
 $calloutFormat = @'
-    <callout>
-    <callout-icon>
-    💡
-    </callout-icon>
-    <callout-content>
-    {0}
-    </callout-content>
-    </callout>
+<callout>
+<callout-icon>
+💡
+</callout-icon>
+<callout-content>
+{0}
+</callout-content>
+</callout>
 '@
 
 function ConvertTo-PosHTML {
+    <#
+    #>
+
     param(
-        [ parameter( mandatory = $true  ) ] [ string ] $In,
-        [ parameter( mandatory = $true  ) ] [ string ] $Out,
-        [ parameter( mandatory = $false ) ] [ string ] $Template = $htmlFormat
+        [ parameter( mandatory = $true  ) ]
+        [ string ] $In
     )
 
     $page          = ''
@@ -246,8 +229,79 @@ function ConvertTo-PosHTML {
     if ( $ulLevel -gt 1 ) {
         $page += "</ul>`n" * $ulLevel }
 
-    set-content -path $Out -value ( $Template -f $page ) }
+    return $page }
+
+# default html skeleton
+$htmlFormat = @'
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
+</head>
+<body>
+<div class="navbar">
+<div class="navbar-content-container">
+<div class="navbar-logo">
+{0}
+</div>
+{1}
+</div>
+</div>
+<header></header>
+<div class="content-container">
+{2}
+</div>
+<footer></footer>
+</body>
+</html>
+'@
+
+function New-PosHTMLSite {
+
+    param(
+        [ parameter( mandatory = $true ) ] [ validatescript( { test-path -path $_ -pathtype container } ) ]
+        [ string ] $DocRoot,
+        [ parameter( mandatory = $true ) ] [ validatescript( { test-path -path $_ -pathtype container } ) ]
+        [ string ] $OutDir
+    )
+
+    $siteMapPath = join-path $docroot 'site.map'
+
+    # look for a site map
+    if ( test-path -path $siteMapPath ) {
+
+        # get site content map
+        $map = get-content -path $siteMapPath | convertfrom-json
+
+        # --! build navbar & pages !--
+
+        $navbar = [ system.collections.arraylist ]::new()
+        $pages  = [ system.collections.arraylist ]::new()
+
+        $map.pages | % {
+
+            [ string ] $htmlFileName = if ( $_.home ) { '/index.html' } else { "$( $_.path ).html" }
+
+            $navbar.add( "<div class=`"navbar-item`"><a href=`"$( $_.path )`">$( $_.nav )</a></div>" ) | out-null
+
+            $filePath = join-path $docroot "$( $_.file ).md"
+
+            $page = convertto-poshtml -in $filePath
+
+            $pages.add( @{ out = ( join-path $outdir $htmlFileName ); page = $page } ) | out-null
+        }
+
+        $navbar = $navbar -join "`n"
+
+        $pages | % {
+            set-content -path $_.out -value ( $htmlFormat -f "<a href=`"/`" style=`"text-decoration: none;`">$( $map.title )</a>", $navbar, $_.page )
+        }
+    }
+}
 
 # --! Export Module Member(s) !--
-
-Export-ModuleMember -Function ConvertTo-PosHTML
+export-modulemember -function convertto-poshtml
+export-modulemember -function new-poshtmlsite

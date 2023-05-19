@@ -1,0 +1,21 @@
+{
+	"title": "PosHTML",
+    "home" : "example",
+    "pages": [
+    	{
+    		"title"   : "PosHTML Home",
+    		"nav"     : "Home", 
+    		"file"    : "example",
+    		"path"    : "/",
+    		"show"    : true,
+    		"home"    : true
+    	},
+    	{
+    		"title"   : "PosHTML Test",
+    		"nav"     : "Test",
+    		"file"    : "secondary",
+    		"path"    : "/test",
+    		"show"    : true
+    	}
+    ]
+}
