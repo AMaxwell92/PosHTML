@@ -17,7 +17,7 @@ This project was originally created to provide a more visually appealing and eas
 | \*text\*                         | Italics                | ✅        |
 | \>                               | Line Quote             | ✅        |
 | \>\>                             | Nested Quotes          | ✅        |
-| \`some code\`                    | Inline Code            | ❌        |
+| \`some code\`                    | Inline Code            | ✅        |
 | \`\`\`some code\`\`\`            | Code Block             | ✅        |
 | \-\-\-                           | Horizontal Rule        | ✅        |
 | \[ text \]\( link \)             | Hyperlink              | ✅        |

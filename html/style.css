@@ -287,9 +287,10 @@ callout-content {
 }
 
 .code-inline {
-    background-color:           var( --bg-color-lighter ) !important;
-    padding:                    0.05vh 0.2vw;
-    border-radius:              4px;
+    color:                      var( --purple );
+    background-color:           var( --bg-color-lighter );
+    padding:                    0.1rem;
+    border-radius:              5px;
     border:                     1px solid;
     border-color:               var( --box-border-color );
     display:                    initial;
