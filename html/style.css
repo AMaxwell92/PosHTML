@@ -5,6 +5,8 @@
 :root {
     --primary-font:             Roboto;
     --secondary-font:           Roboto Mono;
+    --font-size:                calc( 10px + 0.390625vw );
+    --font-weight:              400;
     --fg-color:                 #f8f8f2;
     --bg-color:                 #282a36;
     --bg-color-lighter:         #44475a;
@@ -24,10 +26,7 @@
     --tr-alt-bg:                #444245;
     --box-border-color:         #44475a;
     --padding-layout:           0.6rem;
-    --box-padding:              calc( var( --padding-layout ) + 0.4rem  )
-                                calc( var( --padding-layout ) + 0.4rem  )
-                                calc( var( --padding-layout ) + 0.4rem  )
-                                calc( var( --padding-layout ) + 0.1rem  );
+    --box-padding:              1vh 1vw;
     --box-shadow:               rgba(0, 0, 0, 0.5) 0px 20px 40px -10px;
     --box-border:               1px solid;
     --box-border-radius:        12px;
@@ -44,8 +43,8 @@
 */
 
 html {
-    font-size:                  16px;
-    font-weight:                400px;
+    font-size:                  var( --font-size   );
+    font-weight:                var( --font-weight );
     box-sizing:                 border-box;
 }
 
@@ -57,6 +56,7 @@ header {
 }
 
 body {
+    font-size:                  0.85rem;
     line-height:                1.5rem;
     font-family:                var( --secondary-font   );
     background-color:           var( --bg-color         );
@@ -65,8 +65,8 @@ body {
 }
 
 footer {
-    max-height:                 0;
-    height:                     0;
+    max-height:                 1vh;
+    height:                     1vh;
 }
 
 b {
@@ -94,7 +94,6 @@ hr {
     padding-left:               calc( env( safe-area-inset-right ) + 96px );
     padding-right:              calc( env( safe-area-inset-right ) + 96px );
     margin:                     auto;
-    word-break:                 break-word;
 }
 
 /*
@@ -114,7 +113,7 @@ hr {
     width:                      auto;
     border:                     1px solid;
     border-color:               var( --bg-color-lighter  );
-    position: sticky;
+    position:                   sticky;
 }
 
 .navbar-content-container {
@@ -234,11 +233,10 @@ li:before {
 
 quote {
     background-color:           #ffffff09;
-    margin-top:                 1.25rem;
-    margin-bottom:              1.25rem;
+    padding:                    1.15vh 1.15vw;
+    margin: 1vh 0;
     border-left:                5px solid;
     border-color:               var( --purple );
-    padding-left:               1rem;
     display:                    grid;
     align-items:                center;
     white-space:                pre-wrap;
@@ -249,10 +247,10 @@ quote {
 */
 
 callout {
-    margin-top:                 1.25rem;
-    margin-bottom:              1.25rem;
-    background-color:           var( --callout-bg        );
-    padding:                    var( --box-padding          );
+    margin-top:                 1.25vh;
+    margin-bottom:              1.25vh;
+    background-color:           var( --callout-bg           );
+    /* padding:                    var( --box-padding          ); */
     border:                     var( --box-border           );
     border-color:               var( --box-border-color     );
     border-radius:              var( --box-border-radius    );
@@ -261,17 +259,15 @@ callout {
 }
 
 callout-icon {
-    font-size:                  1.5rem;
+    font-size:                  1.25rem;
+    padding:                    0.5rem;
     position:                   relative;
     display:                    flex;
     align-items:                center;
 }
 
 callout-content {
-    -webkit-margin-start:       8px;
-    margin-inline-start:        8px;
-    overflow:                   hidden;
-    width:                      100%;
+    margin:                     0.25vh 0.25vw;
     display:                    flex;
     align-items:                center;
 }
@@ -305,28 +301,35 @@ cb {
 */
 
 table {
-    padding:                    0.2rem;
+    table-layout: auto;
     box-shadow:                 var( --box-shadow       );
-    background-color:           var( --callout-bg    );
+    background-color:           var( --callout-bg       );
     border:                     var( --box-border       );
     border-color:               var( --box-border-color );
     border-radius:              var( --box-border-radius);
+    display: flex;
+}
+
+tbody{
+    width: 100%;
 }
 
 th {
     text-align:                 left;
-    padding-top:                0.3rem;
-    padding-left:               0.1rem;
-    padding-right:              0.3rem;
+    padding-top:                0.3vh;
+    padding-left:               0.1vw;
+    padding-right:              0.3vw;
     border-bottom:              0.2rem solid;
     border-color:               var( --purple );
 }
 
 td {
-    padding-left:               0.3rem;
-    padding-right:              0.3rem;
-    padding-top:                0.3rem;
-    padding-bottom:             0.3rem;
+    min-width: 5rem;
+    padding: 0.3vh 0.3vw;
+}
+
+td:nth-child( 1 ) {
+    width: 100%;
 }
 
 tr:nth-child( even ) {

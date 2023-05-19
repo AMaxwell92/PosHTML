@@ -4,20 +4,20 @@
 # html tag management
 class Tag {
 
-    [ string ] $tag
+    [ string ] $_tag
     [ string ] $_attributes
 
     # default class constructor
     Tag( [ string ] $tag ) {
 
-        $this.tag = $tag
+        $this._tag = $tag
 
     }
 
     # class constructor, overloaded with attributes param
     Tag( [ string ] $tag, [ string[] ] $attributes ) {
 
-        $this.tag = $tag
+        $this._tag        = $tag
         $this._attributes = $attributes
 
     }
@@ -28,14 +28,14 @@ class Tag {
         # determine attributes
         $attr_str = if ( $this._attributes ) { ' ' + $this._attributes -join ' ' } else { '' }
 
-        return @( '<', $this.tag, $attr_str, '>' ) -join ''
+        return @( '<', $this._tag, $attr_str, '>' ) -join ''
 
     }
 
     # format tag close string
     [ string ] Close() {
 
-        return @( '</', $this.tag, '>' ) -join ''
+        return @( '</', $this._tag, '>' ) -join ''
 
     }
 
@@ -53,12 +53,21 @@ class Tag {
 
     }
 
+    # value-less tag wrap
+    [ string ] wrap() {
+
+        return $this.Open(), $this.Close(), "`n" -join ''
+
+    }
+
+    # tag wrap with value
     [ string ] wrap( [ string ] $value ) {
 
         return $this.Open(), $value.trim(), $this.Close(), "`n" -join ''
 
     }
 
+    # tag wrap with value and no newline
     [ string ] wrap( [ string ] $value, [ bool ] $no_newline ) {
 
         return $this.Open(), $value.trim(), $this.Close() -join ''
@@ -86,6 +95,37 @@ class LinkTag : Tag {
     }
 }
 
+class PosHTMLDoc {
+
+    [ string ] $page_title
+
+    # html tags
+    $h1        = [ Tag ]::new( 'h1'   )
+    $h2        = [ Tag ]::new( 'h2'   )
+    $h3        = [ Tag ]::new( 'h3'   )
+    $div       = [ Tag ]::new( 'div'  )
+    $span      = [ Tag ]::new( 'span' )
+    $ul        = [ Tag ]::new( 'ul'   )
+    $li        = [ Tag ]::new( 'li'   )
+    $ol        = [ Tag ]::new( 'ol'   )
+    $td        = [ Tag ]::new( 'td'   )
+    $th        = [ Tag ]::new( 'th'   )
+    $table     = [ Tag ]::new( 'table')
+    $tr        = [ Tag ]::new( 'tr'   )
+    $quote     = [ Tag ]::new( 'quote')
+    $bold      = [ Tag ]::new( 'b'    )
+    $italics   = [ Tag ]::new( 'i'    )
+    $underline = [ Tag ]::new( 'u'    )
+    $cb        = [ Tag ]::new( 'cb'   )
+    $code      = [ Tag ]::new( 'code' )
+    $hr        = [ Tag ]::new( 'hr'   )
+    $link      = [ LinkTag ]::new()
+
+    PosHTML( [ string ] $page_title ) {
+        $this.page_title = $page_title
+    }
+}
+
 # establish html tags
 
 $h1        = [ Tag ]::new( 'h1'   )
@@ -105,11 +145,12 @@ $bold      = [ Tag ]::new( 'b'    )
 $italics   = [ Tag ]::new( 'i'    )
 $underline = [ Tag ]::new( 'u'    )
 $cb        = [ Tag ]::new( 'cb'   )
+$code      = [ Tag ]::new( 'code' )
 $hr        = [ Tag ]::new( 'hr'   )
 $link      = [ LinkTag ]::new()
 
 # default html skeleton
-$html_format = @'
+$htmlFormat = @'
 <!DOCTYPE html>
 <html>
     <head>
@@ -127,7 +168,7 @@ $html_format = @'
 '@
 
 # callout html format
-$callout_format = @'
+$calloutFormat = @'
                 <callout>
                     <callout-icon>
                         💡
@@ -143,23 +184,23 @@ $callout_format = @'
 
 #region Markdown to HTML
 
-function Convert-MDToHTML {
+function ConvertTo-PosHTML {
     param(
         [ parameter( mandatory = $true ) ]
         [ string ] $In,
         [ parameter( mandatory = $true ) ]
         [ string ] $Out,
-        [ string ] $Template = $html_format
+        [ string ] $Template = $htmlFormat
     )
 
     # read markdown file by line and translate
 
     $page        = ''
     $indent      = ''
-    $ul_level    = 1
-    $table_level = 1
-    $quote_level = 0
-    $cb_open     = $false
+    $ulLevel    = 1
+    $tableLevel = 1
+    $quoteLevel = 0
+    $cbOpen     = $false
 
     # iterate file lines
     Get-Content $In | % {
@@ -182,7 +223,7 @@ function Convert-MDToHTML {
             $line = $line.trim()
 
             # get indent level
-            $indent_level = [ system.math ]::Floor( $spaces.length / 4 )
+            $indentLevel = [ system.math ]::Floor( $spaces.length / 4 )
 
         }
 
@@ -261,9 +302,9 @@ function Convert-MDToHTML {
             $line = $line -replace $pattern
 
             # open the unordered list, if necessary
-            if ( $ul_level -eq 1 -or $indent_level -gt $ul_level ) {
+            if ( $ulLevel -eq 1 -or $indentLevel -gt $ulLevel ) {
 
-                $ul_level += 1
+                $ulLevel += 1
                 $page += "$( $ul.Open() )`n"
 
             }
@@ -273,10 +314,10 @@ function Convert-MDToHTML {
             return
 
         # close any open lists
-        } elseif ( $ul_level -gt 1 ) {
+        } elseif ( $ulLevel -gt 1 ) {
 
-            $page += ( "$( $ul.Close() )`n" ) * ( $ul_level - 1 )
-            $ul_level = 1
+            $page += ( "$( $ul.Close() )`n" ) * ( $ulLevel - 1 )
+            $ulLevel = 1
 
         }
 
@@ -285,7 +326,7 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             $line = $line -replace $pattern, '$1'
-            $page += $callout_format -f $line.trim()
+            $page += $calloutFormat -f $line.trim()
             return
 
         }
@@ -294,10 +335,10 @@ function Convert-MDToHTML {
         $pattern = '^\|.*\|$'
         if ( $line -match $pattern ) {
 
-            if ( $table_level -eq 1 ) {
+            if ( $tableLevel -eq 1 ) {
 
                 $page += "$( $table.Open() )`n"
-                $table_level += 1
+                $tableLevel += 1
 
                 # get column headers
                 $headers = $line -split '\|' | % {
@@ -338,10 +379,10 @@ function Convert-MDToHTML {
 
                 } else { return }
             }
-        } elseif ( $table_level -gt 1 ) {
+        } elseif ( $tableLevel -gt 1 ) {
 
-            $page += ( "$( $table.Close() )`n" ) * ( $table_level - 1 )
-            $table_level = 1
+            $page += ( "$( $table.Close() )`n" ) * ( $tableLevel - 1 )
+            $tableLevel = 1
 
         }
 
@@ -350,26 +391,26 @@ function Convert-MDToHTML {
         if ( $line -match $pattern ) {
 
             # get number of leading symbols
-            $quote_level_delta = ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value.length - $quote_level
-            $quote_level_delta = [ system.math ]::Max( $quote_level_delta, 0 )
-            $quote_level += $quote_level_delta
-            $page += "$( $quote.Open() )" * $quote_level_delta
+            $quoteLevelDelta = ( select-string $pattern -inputobject $line ).matches.groups[ 1 ].value.length - $quoteLevel
+            $quoteLevelDelta = [ system.math ]::Max( $quoteLevelDelta, 0 )
+            $quoteLevel += $quoteLevelDelta
+            $page += "$( $quote.Open() )" * $quoteLevelDelta
             $line = $line -replace $pattern
             $page += "$( $line )`n"
             return
 
-        } elseif ( $quote_level -gt 0 ) {
+        } elseif ( $quoteLevel -gt 0 ) {
 
-            $page += "$( $quote.Close() )`n" * ( $quote_level )
-            $quote_level = 0
+            $page += "$( $quote.Close() )`n" * ( $quoteLevel )
+            $quoteLevel = 0
 
         }
 
         # code block
         $pattern = '```'
-        if ( $line -match $pattern -and -not $cb_open ) {
+        if ( $line -match $pattern -and -not $cbOpen ) {
 
-            $cb_open = $true
+            $cbOpen = $true
 
             $line = $line -replace $pattern
 
@@ -378,7 +419,7 @@ function Convert-MDToHTML {
                 $page += "$( $line )`n" }
             return
 
-        } elseif ( $line -match $pattern -and $cb_open ) {
+        } elseif ( $line -match $pattern -and $cbOpen ) {
 
             $line = $line -replace $pattern
             if ( $line.trim().length -gt 0 ) {
@@ -386,11 +427,11 @@ function Convert-MDToHTML {
 
             $page += "$( $cb.Close() )`n"
 
-            $cb_open = $false
+            $cbOpen = $false
 
             return
 
-        } elseif ( $cb_open ) {
+        } elseif ( $cbOpen ) {
 
             $line = $line -replace $pattern
             if ( $line.trim().length -gt 0 ) {
@@ -401,12 +442,20 @@ function Convert-MDToHTML {
         }
 
         # inline code
+        $pattern = '`(.+?)`'
+        if ( $line -match $pattern ) {
+
+            $line = $line -replace $pattern, '$1'
+            $page += $code.Wrap( $line )
+            return
+
+        }
 
 
         # horizontal rule
         if ( $line.trim() -eq '---' ) {
 
-            $page += "<hr></hr>`n"
+            $page += "$( $hr.Wrap() )`n"
             return
 
         }
@@ -415,15 +464,15 @@ function Convert-MDToHTML {
         $page += $line
     }
 
-    if ( $table_level -gt 1 ) {
+    if ( $tableLevel -gt 1 ) {
 
-        $page += ( "$( $table.Close() )`n" ) * ( $table_level - 1 )
+        $page += ( "$( $table.Close() )`n" ) * ( $tableLevel - 1 )
 
     }
 
-    if ( $ul_level -gt 1 ) {
+    if ( $ulLevel -gt 1 ) {
 
-        $page += ( "$( $ul.Close() )`n" ) * ( $ul_level - 1 )
+        $page += ( "$( $ul.Close() )`n" ) * ( $ulLevel - 1 )
 
     }
 
@@ -434,4 +483,4 @@ function Convert-MDToHTML {
 
 # --! Export Module Member(s) !--
 
-Export-ModuleMember -Function Convert-MDToHTML
+Export-ModuleMember -Function ConvertTo-PosHTML

@@ -1,6 +1,6 @@
 Import-Module .\src\PosHTML.psm1
 
-$html_template = ( get-content .\templates\page.html ) -join "`n"
+$htmlTemplate = ( get-content .\templates\page.html ) -join "`n"
 
 <#
     Params:
@@ -9,6 +9,6 @@ $html_template = ( get-content .\templates\page.html ) -join "`n"
         Out : string
             Desired HTML file output path
         Template : string | $null
-            Optional HTML templage file path
+            Optional HTML templage file path - the first string formatting token - {0} - will be targeted for translated HTML
 #>
-Convert-MDToHTML -In .\markdown\example.md -Out .\html\example.html -Template $html_template
+ConvertTo-PosHTML -In .\markdown\example.md -Out .\html\example.html -Template $htmlTemplate
