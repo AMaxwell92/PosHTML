@@ -1,45 +1,41 @@
 
 # default html skeleton
 $htmlFormat = @'
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
     <head>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
     </head>
     <body>
-        <div class="header"></div>
-        <div class="content-container">
-            {0}
-        </div>
+    <header></header>
+    <div class="content-container">
+    {0}</div>
+    <footer></footer>
     </body>
-</html>
+    </html>
 '@
 
 # callout html format
 $calloutFormat = @'
-<callout>
-<callout-icon>
-💡
-</callout-icon>
-<callout-content>
-{0}
-</callout-content>
-</callout>
-
+    <callout>
+    <callout-icon>
+    💡
+    </callout-icon>
+    <callout-content>
+    {0}
+    </callout-content>
+    </callout>
 '@
 
 function ConvertTo-PosHTML {
     param(
-        [ parameter( mandatory = $true ) ]
-        [ string ] $In,
-        [ parameter( mandatory = $true ) ]
-        [ string ] $Out,
-        [ string ] $Template = $htmlFormat
+        [ parameter( mandatory = $true  ) ] [ string ] $In,
+        [ parameter( mandatory = $true  ) ] [ string ] $Out,
+        [ parameter( mandatory = $false ) ] [ string ] $Template = $htmlFormat
     )
-
-    # read markdown file by line and translate
 
     $page          = ''
     $indent        = ''
@@ -54,24 +50,23 @@ function ConvertTo-PosHTML {
         # capture pipeline input
         $line = $_
 
-        # get leading spaces
         try {
 
-            $spaces = ( select-string -pattern '^(\s+)' -inputobject $line ).matches.groups[ 1 ].value
+            # get leading spaces
+            $spaces = ( select-string -pattern '^(\s+)' -inputobject $line ).matches.groups[ 1 ].value }
 
-        } catch {
+        catch {
 
-            $spaces = ''
+            # set a default value
+            $spaces = '' }
 
-        } finally {
+        finally {
 
             # trim string
             $line = $line.trim()
 
             # get indent level
-            $indentLevel = [ system.math ]::floor( $spaces.length / 4 )
-
-        }
+            $indentLevel = [ system.math ]::floor( $spaces.length / 4 ) }
 
         # bold text
         $pattern = '\*{2}(?!\*)(.+?)\*{2}'
@@ -150,10 +145,7 @@ function ConvertTo-PosHTML {
 
                     if ( $header.length -gt 0 ) {
 
-                        "<th>`n$header`n</th>`n"
-
-                    }
-                }
+                        "<th>`n$header`n</th>`n" } }
 
                 # close the table row
                 $page += "<tr>`n$headers</tr>`n"
@@ -246,8 +238,7 @@ function ConvertTo-PosHTML {
         # append line
         if ( $line.length -gt 0 ) {
             $page += if ( $line.endswith( "`n" ) ) {
-                $line } else { "$line`n" } }
-    }
+                $line } else { "$line`n" } } }
 
     if ( $tableLevel -gt 1 ) {
         $page += "</table>`n" * $tableLevel }
@@ -255,8 +246,7 @@ function ConvertTo-PosHTML {
     if ( $ulLevel -gt 1 ) {
         $page += "</ul>`n" * $ulLevel }
 
-    set-content -path $Out -value ( $Template -f $page )
-}
+    set-content -path $Out -value ( $Template -f $page ) }
 
 # --! Export Module Member(s) !--
 
