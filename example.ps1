@@ -12,7 +12,7 @@ Import-Module .\src\PosHTML.psm1
 # ConvertTo-PosHTML -In .\markdown\example.md -Out .\html\example.html
 
 # generate the site
-new-poshtmlsite -docroot 'D:\Cloud\personal\Profile\Documents\Repositories\PosHTML\markdown' -outdir 'D:\Cloud\personal\Profile\Documents\Repositories\PosHTML\docs'
+new-poshtmlsite -docroot 'D:\Cloud\personal\Profile\Documents\Repositories\PosHTML\markdown' -outdir 'D:\Cloud\personal\Profile\Documents\Repositories\PosHTML\docs' -pathprefix '/PosHTML'
 
 # copy the stylesheet
 copy-item '.\src\style.css' '.\docs\style.css'

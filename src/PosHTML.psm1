@@ -237,7 +237,7 @@ $htmlFormat = @'
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="assets/css/style.css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%20Mono"/>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto" />
 </head>
@@ -265,7 +265,9 @@ function New-PosHTMLSite {
         [ parameter( mandatory = $true ) ] [ validatescript( { test-path -path $_ -pathtype container } ) ]
         [ string ] $DocRoot,
         [ parameter( mandatory = $true ) ] [ validatescript( { test-path -path $_ -pathtype container } ) ]
-        [ string ] $OutDir
+        [ string ] $OutDir,
+        [ parameter() ]
+        [ string ] $PathPrefix = ''
     )
 
     $siteMapPath = join-path $docroot 'site.map'
@@ -285,7 +287,7 @@ function New-PosHTMLSite {
 
             [ string ] $htmlFileName = if ( $_.home ) { '/index.html' } else { "$( $_.path ).html" }
 
-            $navbar.add( "<div class=`"navbar-item`"><a href=`"$( $_.path )`">$( $_.nav )</a></div>" ) | out-null
+            $navbar.add( "<div class=`"navbar-item`"><a href=`"$( "$PathPrefix$( $_.path )" )`">$( $_.nav )</a></div>" ) | out-null
 
             $filePath = join-path $docroot "$( $_.file ).md"
 
@@ -297,7 +299,7 @@ function New-PosHTMLSite {
         $navbar = $navbar -join "`n"
 
         $pages | % {
-            set-content -path $_.out -value ( $htmlFormat -f "<a href=`"/`" style=`"text-decoration: none;`">$( $map.title )</a>", $navbar, $_.page )
+            set-content -path $_.out -value ( $htmlFormat -f "<a href=`"$( $map.root )`" style=`"text-decoration: none;`">$( $map.title )</a>", $navbar, $_.page )
         }
     }
 }
