@@ -1,6 +1,6 @@
 {
 	"title": "PosHTML",
-    "root" : "/PosHTML/",
+    "root" : "/",
     "pages": [
     	{
     		"title"   : "PosHTML Home",
