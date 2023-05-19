@@ -6,7 +6,7 @@ PosHTML ( pronounced "posh-tee-em-el" ) is a simple PowerShell module designed t
 
 This project was originally created to provide a more visually appealing and easily readable format to review notes I prepared for meetings and similar, as well as an opportunity to learn CSS! Development for this project will continually expand and eventually be folded into a separate tool that will allow generation of entire static websites.
 
-See the demo here: [ PosHTML Demo ]( https://amaxwell92.github.io/PosHTML/ )
+See the demo here: [ PosHTML Demo ]( https://poshtml.com )
 
 ## Token Support Status
 
